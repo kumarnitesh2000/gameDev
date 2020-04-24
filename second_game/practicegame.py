@@ -4,21 +4,27 @@ pygame.init()
 
 win=(800,600)
 now_draw=False
+
 last_pos=(0,0)
 screen=pygame.display.set_mode(win)
 pygame.display.set_caption("myGame")
 
-'''
-def show_pos(event):
-    pos_show=font.render(str(event),True,(255,0,0))
-    screen.blit(pos_show,(100,100))
-'''
+def draw():
+    pygame.draw.rect(screen, (255, 255, 255), (10, 10, 180, 60), 1)
+    font = pygame.font.Font("Magnolia.ttf", 35)
+    text = font.render("Reset Board", True, (255, 255, 255))
+    screen.blit(text, (10, 10))
+def is_Over(pos,x,width,y,height):
+    if pos[0]>x and pos[0]<width+x:
+        if pos[1]>y and pos[1]<height+y:
+            return True
 
-def draw(event):
+    return False
 
+def clicked():
+    screen.fill((0,0,0))
+    pygame.display.update()
 
-    pygame.draw.circle(screen,(0,0,0),event,10)
-    print("Drawn")
 def roundline(srf, color, start, end):
     dx = end[0]-start[0]
     dy = end[1]-start[1]
@@ -35,16 +41,29 @@ while run:
     event=pygame.event.wait()
     if event.type == pygame.QUIT:
         run = False
+
     if event.type==pygame.MOUSEBUTTONDOWN:
-        #draw(event.pos)
         pygame.draw.circle(screen, (255,255,255), event.pos, 10)
         now_draw=True
+        if is_Over(event.pos, 10, 180, 10, 60):
+            clicked()
+        if event.button==1:#print("left clicked mouse touch")
+            pass
+        elif event.button==3:#print("right clicked")
+            pass
     if event.type == pygame.MOUSEBUTTONUP:
         now_draw = False
+        # when we left the mouse
     if event.type == pygame.MOUSEMOTION:
         if now_draw:
             pygame.draw.circle(screen, (255, 255, 255), event.pos, 10)
             roundline(screen, (255,255,255), event.pos, last_pos)
         last_pos = event.pos
 
+
+    draw()
+
+
+
+    pygame.display.update()
     pygame.display.flip()
